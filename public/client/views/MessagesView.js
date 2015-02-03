@@ -3,7 +3,7 @@ var MessageView = Backbone.View.extend({
   template : _.template(
     '<div class="message-display"> \
       <span> \
-        <strong><%- username %></strong>@<%- room %> - <%- text %> \
+        <strong><%- username %>[<%= lang.toUpperCase()%>]</strong>@<%- room %> - <%- text %> \
       </span> \
     </div>'
     ),
