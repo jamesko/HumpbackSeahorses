@@ -45,8 +45,8 @@ var SubmitView = Backbone.View.extend({
     if(e.type==="keyup" && typingStatus.html()===typingFlag && $('#chatInput').val()!==""){
       return;
     }
+
     if(e.type==="keyup" && typingStatus.html()===""){
-      console.log("2nd");
       typingStatus.html(typingFlag);
       //TODO: emit typingStatus as true! {username, room and status = true}
       return
