@@ -38,28 +38,29 @@ var SubmitView = Backbone.View.extend({
 
   emitChangesInTypingStatus : function(e){
     e.preventDefault();
-    var typingStatus = $("form").find("div");
+    var typingStatus = $("#typingStatus");
+    var isChatInput = $('#chatInput').val() !== "";
     var typingFlag = ". . .";
 
     //do nothing if just typing while typing status is already true
-    if(e.type==="keyup" && typingStatus.html()===typingFlag && $('#chatInput').val()!==""){
+    if(e.type === "keyup" && typingStatus.html() === typingFlag && isChatInput){
       return;
     }
 
-    if(e.type==="keyup" && typingStatus.html()===""){
+    if(e.type === "keyup" && typingStatus.html() === "" && isChatInput){
       typingStatus.html(typingFlag);
       //TODO: emit typingStatus as true! {username, room and status = true}
       return
     }
     //check if user cleared input with a backspace
-    if(e.type==="keyup" && $('#chatInput').val()==="" && typingStatus.html() === typingFlag){
+    if(e.type === "keyup" && !isChatInput && typingStatus.html() === typingFlag){
       typingStatus.empty();
       //TODO: emit typingStatus as false! {username, room and status = false}
       return;
     }
     //TODO & Comment: when submitting: rely on receipt of ...
     //...submitted msg as signal to set typingstatus to false
-    if(e.type==="submit"){
+    if(e.type === "submit"){
       typingStatus.empty();
       return;
     }
