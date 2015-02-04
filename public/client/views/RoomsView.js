@@ -10,7 +10,7 @@ var RoomView = Backbone.View.extend({
   templateAlt : _.template(
       '<div class="message-display">' +
       '<span>' +
-      '<strong><%- username %></strong>' +
+      '<strong><%- room %></strong>' +
       '</span>' +
       '</div>'
   ),
@@ -48,14 +48,15 @@ var RoomsView = Backbone.View.extend({
   },
 
   render : function () {
-    var list = ""
-    this.collection.forEach(this.renderRoom, this);
+    var listHtml = ""
+    this.collection.forEach(function(val, key, list) {
+      listHtml += this.renderRoom;
+    }, this);
 
-    this.$el.html(list);
+    this.$el.html(listHtml);
   },
 
-  renderRoom : function(message) {
-    //message.cid is unique client-only id
+  renderRoom : function(room) {
     var roomView = new RoomView ({model : room});
     return roomView.render();
   }
