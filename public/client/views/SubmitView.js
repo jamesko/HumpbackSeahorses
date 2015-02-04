@@ -43,7 +43,6 @@ var SubmitView = Backbone.View.extend({
 
     //do nothing if just typing while typing status is already true
     if(e.type==="keyup" && typingStatus.html()===typingFlag && $('#chatInput').val()!==""){
-      console.log("1st");
       return;
     }
     if(e.type==="keyup" && typingStatus.html()===""){
