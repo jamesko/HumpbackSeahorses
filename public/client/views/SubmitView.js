@@ -8,7 +8,11 @@ var SubmitView = Backbone.View.extend({
     'keyup #chatInput' : 'emitChangesInTypingStatus'
   },
 
-  initialize: function(){},
+  initialize: function(){
+      socket.on('user typing', function(data){
+        //TODO: modify specified user's typing status as found in data
+      });
+  },
 
   handleSubmit: function(e){
     e.preventDefault();
@@ -47,15 +51,26 @@ var SubmitView = Backbone.View.extend({
       return;
     }
 
+    var burst = function(isTyping){
+      var statusBurst = {
+        username: $('#username').val(),
+        room: $('#room').val() || 'lobby',
+        status: isTyping,
+        connection_ID: socket.id
+      }
+      socket.emit('user typing', statusBurst);
+    }
+
+    //check if input is now not null and typing status is false
     if(e.type === "keyup" && typingStatus.html() === "" && isChatInput){
       typingStatus.html(typingFlag);
-      //TODO: emit typingStatus as true! {username, room and status = true}
+      burst(true);
       return
     }
     //check if user cleared input with a backspace
     if(e.type === "keyup" && !isChatInput && typingStatus.html() === typingFlag){
       typingStatus.empty();
-      //TODO: emit typingStatus as false! {username, room and status = false}
+      burst(false);
       return;
     }
     //TODO & Comment: when submitting: rely on receipt of ...
