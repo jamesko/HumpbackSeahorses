@@ -58,6 +58,11 @@ io.on('connection', function(socket){
     socket.userLang = newLang;
   });
 
+  //emit typing status
+  socket.on('user typing', function(data){
+    io.to(data.room).emit('user typing', data);
+  });
+
 });
 
 http.listen(port, function(){
