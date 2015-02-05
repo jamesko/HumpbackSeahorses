@@ -47,7 +47,7 @@ var SubmitView = Backbone.View.extend({
     var typingFlag = ". . .";
 
     //do nothing if just typing while typing status is already true
-    if(e.type === "keyup" && typingStatus.html() === typingFlag && isChatInput){
+    if(e.type === "keyup" && typingStatus.html() !== "" && isChatInput){
       return;
     }
 
@@ -68,7 +68,7 @@ var SubmitView = Backbone.View.extend({
       return
     }
     //check if user cleared input with a backspace
-    if(e.type === "keyup" && !isChatInput && typingStatus.html() === typingFlag){
+    if(e.type === "keyup" && !isChatInput && typingStatus.html() !== ""){
       typingStatus.empty();
       burst(false);
       return;
