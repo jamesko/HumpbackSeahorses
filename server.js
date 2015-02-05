@@ -44,7 +44,9 @@ io.on('connection', function(socket){
     console.log(room);
     //chatter.changeLanguage(socket.userLang, newLang, socket.currentRoom);
     //socket.userLang = newLang;
-    io.emit('new room', 'message');
+    chatter.getRooms(function(rooms) {
+      io.emit('new room', "rooms" + rooms);
+    });
   });
 
   socket.on('join room', function(data){

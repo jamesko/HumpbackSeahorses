@@ -25,18 +25,14 @@ ChatHandler.prototype.prepareMessage = function(msg, callback){
 
 //return list of rooms
 ChatHandler.prototype.getRooms = function(callback){
-  Rooms.find({room: msg.room}, function(err, room){
-    if (err){
-      console.log(err, ' error finding room!');
-    }
-    translator.translate(msg, room, function(err, results){
-      if(err){
-        console.log('error translating: ', err);
-        callback(err);
-      }
-      msg.translations = results;
-      callback(msg);
+  Rooms.find({}, function(err, rooms) {
+    var roomList = [];
+
+    rooms.forEach(function(room) {
+      roomList.push(room);
     });
+
+    callback(roomList);
   });
 };
 
