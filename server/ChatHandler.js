@@ -29,7 +29,8 @@ ChatHandler.prototype.getRooms = function(callback){
     var roomList = [];
 
     rooms.forEach(function(room) {
-      roomList.push(room);
+      console.log(room);
+      roomList.push({room: room.room, lang: room.lang});
     });
 
     callback(roomList);

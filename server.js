@@ -42,10 +42,8 @@ io.on('connection', function(socket){
 
   socket.on('get rooms', function(room){
     console.log(room);
-    //chatter.changeLanguage(socket.userLang, newLang, socket.currentRoom);
-    //socket.userLang = newLang;
     chatter.getRooms(function(rooms) {
-      io.emit('new room', "rooms" + rooms);
+      io.emit('new room', rooms);
     });
   });
 

@@ -1,14 +1,14 @@
 //returns rendered template
 var RoomView = Backbone.View.extend({
   template : _.template(
-      '<div class="message-display"> \
+      '<div class="room-display <%- room %>"> \
         <span> \
           <strong><%- room %></strong> \
         </span> \
       </div>'
   ),
   templateAlt : _.template(
-      '<div class="message-display">' +
+      '<div class="room-display <%- room %>">' +
       '<span>' +
       '<strong><%- room %></strong>' +
       '</span>' +
@@ -21,7 +21,7 @@ var RoomView = Backbone.View.extend({
     } else {
       this.$el.html(this.templateAlt(this.model.attributes));
     }
-    return this.$el;
+    $(".activeRooms").append(this.$el);
   }
 });
 
@@ -34,17 +34,13 @@ var RoomsView = Backbone.View.extend({
 
     socket.emit('get rooms', 'Need rooms.');
 
-    //toggle display users' language
-    //this.userLangFlag = true;
-    //vent.on('click:dispLang', _.bind(this.displayUserLanguage, this));
-
     //socket.io listener for emits
     socket.on('new room', function(room){
-      //adds message to collection
-      console.log(room);
-      //var userLang = $('#lang').val();
-      //list.text = list.translations[userLang];
-      //collection.addlist(list);
+      var newModel, i;
+      for (var i = room.length - 1; i >= 0; i -= 1) {
+        newModel = new Room(room[i]);
+        collection.add(newModel);
+      }
     });
 
     //storage variable for displayed messages
@@ -52,16 +48,13 @@ var RoomsView = Backbone.View.extend({
   },
 
   render : function () {
-    var listHtml = ""
     this.collection.forEach(function(val, key, list) {
-      listHtml += this.renderRoom;
+      this.renderRoom(val);
     }, this);
-
-    this.$el.html(listHtml);
   },
 
   renderRoom : function(room) {
     var roomView = new RoomView ({model : room});
-    return roomView.render();
+    roomView.render();
   }
 });

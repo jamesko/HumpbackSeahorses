@@ -2,7 +2,7 @@
 var Room = Backbone.Model.extend({
   defaults:{
     room:'',
-    lang: 'en',
-    translations: {}
+    lang: {en: 1}
+    //translations: {}
   }
 });
