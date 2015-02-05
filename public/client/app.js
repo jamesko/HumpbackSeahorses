@@ -17,4 +17,9 @@ $(function(){
     el: $('#messagesView'),
     collection: messages
   });
+  var rooms = new Rooms();
+  var roomsView = new RoomsView({
+    el: $('.activeRooms'),
+    collection: rooms
+  })
 });

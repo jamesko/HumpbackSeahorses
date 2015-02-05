@@ -40,6 +40,13 @@ io.on('connection', function(socket){
     });
   });
 
+  socket.on('get rooms', function(room){
+    console.log(room);
+    chatter.getRooms(function(rooms) {
+      io.emit('new room', rooms);
+    });
+  });
+
   socket.on('join room', function(data){
     //leave room and update rooms database
     socket.leave(socket.currentRoom);

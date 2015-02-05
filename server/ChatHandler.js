@@ -23,6 +23,20 @@ ChatHandler.prototype.prepareMessage = function(msg, callback){
   });
 };
 
+//return list of rooms
+ChatHandler.prototype.getRooms = function(callback){
+  Rooms.find({}, function(err, rooms) {
+    var roomList = [];
+
+    rooms.forEach(function(room) {
+      console.log(room);
+      roomList.push({room: room.room, lang: room.lang});
+    });
+
+    callback(roomList);
+  });
+};
+
 // This accepts strings as arguments, will create or join joinRoom 
 // and increment language counter
 ChatHandler.prototype.joinRoom = function(joinRoom, lang, callback){
