@@ -40,6 +40,13 @@ io.on('connection', function(socket){
     });
   });
 
+  socket.on('get rooms', function(room){
+    console.log(room);
+    //chatter.changeLanguage(socket.userLang, newLang, socket.currentRoom);
+    //socket.userLang = newLang;
+    io.emit('new room', 'message');
+  });
+
   socket.on('join room', function(data){
     //leave room and update rooms database
     socket.leave(socket.currentRoom);

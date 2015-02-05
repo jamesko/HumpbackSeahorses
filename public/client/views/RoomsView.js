@@ -30,17 +30,21 @@ var RoomsView = Backbone.View.extend({
   initialize : function(){
     var collection = this.collection;
     this.collection.on('add', this.render, this);
+    this.collection.on('remove', this.render, this);
+
+    socket.emit('get rooms', 'Need rooms.');
 
     //toggle display users' language
-    this.userLangFlag = true;
-    vent.on('click:dispLang', _.bind(this.displayUserLanguage, this));
+    //this.userLangFlag = true;
+    //vent.on('click:dispLang', _.bind(this.displayUserLanguage, this));
 
     //socket.io listener for emits
-    socket.on('new room', function(list){
+    socket.on('new room', function(room){
       //adds message to collection
-      var userLang = $('#lang').val();
-      list.text = list.translations[userLang];
-      collection.addlist(list);
+      console.log(room);
+      //var userLang = $('#lang').val();
+      //list.text = list.translations[userLang];
+      //collection.addlist(list);
     });
 
     //storage variable for displayed messages
