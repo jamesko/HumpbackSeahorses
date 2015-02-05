@@ -19,7 +19,7 @@ gulp.task('scripts', function(){
                    './public/client/**/*.js'])
           .pipe(concat('scripts.js'))
           .pipe(rename('scripts.min.js'))
-          .pipe(uglify())
+          //.pipe(uglify())
           .pipe(gulp.dest('./public/dist/'));
 });
 
