@@ -12,11 +12,9 @@ var MessageView = Backbone.View.extend({
   ),
 
   render : function(userLangFlag){
-    if (userLangFlag) {
-      this.$el.html(this.template(this.model.attributes));
-    } else {
+    userLangFlag ?
+      this.$el.html(this.template(this.model.attributes)) :
       this.$el.html(this.templateAlt(this.model.attributes));
-    }
     return this.$el;
   }
 });
@@ -28,8 +26,8 @@ var MessagesView = Backbone.View.extend({
     this.collection.on('add', this.render, this);
 
     //toggle display users' language
-    this.userLangFlag = true;
-    vent.on('click:dispLang', _.bind(this.displayUserLanguage, this));
+    this.userLangFlag = $('#dispLang').attr('checked');
+    vent.on('click:dispLang', this.displayUserLanguage, this);
 
     //socket.io listener for emits
     socket.on('chat message', function(msg){
@@ -43,13 +41,14 @@ var MessagesView = Backbone.View.extend({
     this.onscreenMessages = {};
   },
 
-  render : function () {
-    this.collection.forEach(this.renderMessage, this);
+  render : function (flag) {
+    flag ? this.collection.forEach(this.renderMessage, this) :
+           this.collection.forEach(this.reRenderMessage, this);
   },
 
   renderMessage : function(message) {
     //message.cid is unique client-only id
-    if (!this.onscreenMessages[message.cid]) {
+   if (!this.onscreenMessages[message.cid]) {
       var messageView = new MessageView ({model : message});
       this.$el.append (messageView.render(this.userLangFlag));
       this.onscreenMessages[message.cid] = true;
@@ -57,8 +56,17 @@ var MessagesView = Backbone.View.extend({
     }
   },
 
-  displayUserLanguage : function(clicked){
-    this.userLangFlag = clicked;
-  }
+  displayUserLanguage : function(checked){
+    this.userLangFlag = checked;
+    $('#messagesView').empty();
+    this.render(false);
 
+  },
+
+  reRenderMessage : function(message) {
+      var messageView = new MessageView ({model : message});
+      this.$el.append (messageView.render(this.userLangFlag));
+      this.onscreenMessages[message.cid] = true;
+      $('#messagesView').scrollTop(2000);
+  }
 });
