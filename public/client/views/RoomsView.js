@@ -29,18 +29,20 @@ var RoomsView = Backbone.View.extend({
 
   initialize : function(){
     var collection = this.collection;
-    this.collection.on('add', this.render, this);
+    var that = this;
+    //this.collection.on('add', this.render, this);
     this.collection.on('remove', this.render, this);
 
     socket.emit('get rooms', 'Need rooms.');
 
     //socket.io listener for emits
-    socket.on('new room', function(room){
+    socket.on('all rooms', function(room){
       var newModel, i;
       for (var i = room.length - 1; i >= 0; i -= 1) {
         newModel = new Room(room[i]);
         collection.add(newModel);
       }
+      that.render();
     });
 
     //storage variable for displayed messages
