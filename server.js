@@ -41,7 +41,6 @@ io.on('connection', function(socket){
   });
 
   socket.on('get rooms', function(room){
-    console.log(room);
     chatter.getRooms(function(rooms) {
       io.emit('new room', rooms);
     });
