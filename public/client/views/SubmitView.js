@@ -17,9 +17,10 @@ var SubmitView = Backbone.View.extend({
   handleSubmit: function(e){
     e.preventDefault();
     var message = {
+      user_id: socket.id,
+      username: $('#username').val(),
       text: $('#chatInput').val(),
       lang: $('#lang').val(),
-      username: $('#username').val(),
       room: $('#room').val()
     };
     socket.emit('chat message', message);
@@ -53,10 +54,10 @@ var SubmitView = Backbone.View.extend({
 
     var burst = function(isTyping){
       var statusBurst = {
+        user_id: socket.id,
         username: $('#username').val(),
         room: $('#room').val() || 'lobby',
-        status: isTyping,
-        connection_ID: socket.id
+        status: isTyping
       }
       socket.emit('user typing', statusBurst);
     }
