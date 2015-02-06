@@ -36,8 +36,8 @@ $(function(){
       rule = '.message-display[data-user_id="' + id + '"] { display: none; }';
       rule = rule + '[data-user_id="' + id + '"] { color: grey; }';
     }else if(action === "highlightON"){
-      //rule = ???
-    }else if(action === "ignoreOFF" || "highlightOFF"){
+      //TODO: rule for highlighting users
+    }else if(action === "ignoreOFF" || action === "highlightOFF"){
       $('style[data-user_id="' + id + '"]').remove();
       return;
     }
