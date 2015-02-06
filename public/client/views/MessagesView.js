@@ -3,18 +3,15 @@ var MessageView = Backbone.View.extend({
   template : _.template(
     '<div class="message-display"> \
       <span> \
-        <strong><%- username %>[<%= lang.toUpperCase()%>]</strong>@<%- room %> - <%- text %> \
+        <strong><%- username %><% if (this.userLangFlag){ %> [<%= lang.toUpperCase()%>]<% } %> \
+      </strong>@<%- room %> - <%- text %> \
       </span> \
     </div>'
     ),
-  templateAlt : _.template(
-    '<div class="message-display"> <span> <strong><%- username %></strong>@<%- room %> - <%- text %></span></div>'
-  ),
 
   render : function(userLangFlag){
-    userLangFlag ?
-      this.$el.html(this.template(this.model.attributes)) :
-      this.$el.html(this.templateAlt(this.model.attributes));
+      this.userLangFlag = userLangFlag;
+      this.$el.html(this.template(this.model.attributes)) ;
     return this.$el;
   }
 });
@@ -26,7 +23,7 @@ var MessagesView = Backbone.View.extend({
     this.collection.on('add', this.render, this);
 
     //toggle display users' language
-    this.userLangFlag = $('#dispLang').attr('checked');
+    this.userLangFlag = !!$('#dispLang').attr('checked');
     vent.on('click:dispLang', this.displayUserLanguage, this);
 
     //socket.io listener for emits
