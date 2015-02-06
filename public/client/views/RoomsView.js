@@ -58,6 +58,9 @@ var RoomsView = Backbone.View.extend({
     $('select[name=room]').empty().append(this.collection.map(function(room) {
       return new RoomView ({model : room}).$el;
     }));
+    if ($('select[name=room] option[value=lobby]').length === 0) {
+      $('select[name=room]').prepend('<option value="lobby">lobby</option>');
+    }
     $('select[name=room]').val($('#room').val() || 'lobby');
   }
 
