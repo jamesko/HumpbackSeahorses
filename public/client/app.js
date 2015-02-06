@@ -26,7 +26,6 @@ $(function(){
   });
 
   var usersInRoomView = new UsersInRoomView({
-    //el: $('#usersInRoom'),
     collection: messages
   });
 });

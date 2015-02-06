@@ -1,4 +1,5 @@
 var UsersInRoomView = Backbone.View.extend({
+
   el: $('#usersInRoom'),
 
   initialize: function(){
