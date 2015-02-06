@@ -1,11 +1,9 @@
 //returns rendered template
 var RoomView = Backbone.View.extend({
+  tagName: "option",
+
   template : _.template(
-    '<div class="room-display <%- room %>">' +
-    '<span>' +
-    '<strong><%- room %></strong>' +
-    '</span>' +
-    '</div>'
+    '<%- room %>'
   ),
 
   initialize: function() {
@@ -14,11 +12,15 @@ var RoomView = Backbone.View.extend({
 
   render : function(){
     this.$el.html(this.template(this.model.attributes));
+    this.$el.val(this.model.get('room'));
     return this;
   }
 });
 
 var RoomsView = Backbone.View.extend({
+  events: {
+    'click .room-display': this.changeRoom
+  },
 
   initialize : function(){
     var collection = this.collection;
@@ -53,9 +55,10 @@ var RoomsView = Backbone.View.extend({
   },
 
   render : function () {
-    $('.activeRooms').empty().append(this.collection.map(function(room) {
+    $('.activeRooms select').empty().append(this.collection.map(function(room) {
       return new RoomView ({model : room}).$el;
     }));
+    $(".activeRooms select").val("lobby");
   }
 
 });
