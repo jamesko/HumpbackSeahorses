@@ -8,13 +8,18 @@ var UsersInRoomView = Backbone.View.extend({
 
   render: function(){
 
-    var names = _.uniq(this.collection.map(function(message){
-      return message.get("username");
+    var nameIdPairs = _.uniq(this.collection.map(function(message){
+      return message.get("username") + ";" + message.get("user_id");
     }));
 
     this.$el.empty();
-    names.forEach(function(name){
-      this.$el.append('<li style="list-style: none">' + name + '</li>');
+    nameIdPairs.forEach(function(nameIdPair){
+      var index = nameIdPair.indexOf(";");
+      var username = nameIdPair.slice(0,index);
+      var user_id = nameIdPair.slice(index+1);
+      var data = 'data-user_id="' + user_id + '"';
+      var typing = '<span class="typingIndicator"></span>'
+      this.$el.append('<li style="list-style: none" ' + data + '>' + username + typing + '</li>');
     }, this)
 
   }
