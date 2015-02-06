@@ -12,6 +12,12 @@ var SubmitView = Backbone.View.extend({
   initialize: function(){
       socket.on('user typing', function(data){
         //TODO: modify specified user's typing status as found in data
+        var $username = $("li[data-user_id = '" + data.user_id + "']").find(".typingIndicator");
+        if(data.status){
+          $username.html("...");
+        }else{
+          $username.empty();
+        }
       });
   },
 
