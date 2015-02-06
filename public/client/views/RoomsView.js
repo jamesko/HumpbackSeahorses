@@ -18,16 +18,12 @@ var RoomView = Backbone.View.extend({
 });
 
 var RoomsView = Backbone.View.extend({
-  events: {
-    'click .room-display': this.changeRoom
-  },
-
   initialize : function(){
     var collection = this.collection;
     collection.on('add', this.render, this);
     collection.on('remove', this.render, this);
 
-    socket.emit('get rooms', 'Need rooms.');
+    socket.emit('get rooms');
 
     //socket.io listener for emits
     socket.on('new room', function(rooms){
@@ -44,24 +40,18 @@ var RoomsView = Backbone.View.extend({
       var roomName = room.room;
       var foundRoom = collection.where({room: roomName});
 
-      if (foundRoom.length) {
-        collection.remove(foundRoom);
-      }
-
+      foundRoom.length && collection.remove(foundRoom);
     });
-
-    //storage variable for displayed messages
-    this.activeRooms = {};
   },
 
   render : function () {
-    $('select[name=room]').empty().append(this.collection.map(function(room) {
+    var room = $('select[name=room]');
+    room.empty().append(this.collection.map(function(room) {
       return new RoomView ({model : room}).$el;
     }));
-    if ($('select[name=room] option[value=lobby]').length === 0) {
-      $('select[name=room]').prepend('<option value="lobby">lobby</option>');
+    if (room.find('option[value=lobby]').length === 0) {
+      room.prepend('<option value="lobby">lobby</option>');
     }
-    $('select[name=room]').val($('#room').val() || 'lobby');
+    room.val($('#room').val() || 'lobby');
   }
-
 });

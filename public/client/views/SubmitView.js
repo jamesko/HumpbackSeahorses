@@ -37,7 +37,6 @@ var SubmitView = Backbone.View.extend({
 
   changeLanguage: function(e){
     e.preventDefault();
-    console.log('changing language');
     socket.emit('change language', $('#lang').val());
   },
 

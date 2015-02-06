@@ -5,16 +5,13 @@ var ChatHandler = function(){};
 
 //translate/emit message
 ChatHandler.prototype.prepareMessage = function(msg, callback){
-  if(msg.room ===''){
-    msg.room = 'lobby';
-  }
-  Rooms.findOne({room: msg.room}, function(err, room){
-    if (err){
-      console.log(err, ' error finding room!');
-    }
+  var room = msg.room;
+  room = room || 'lobby';
+  Rooms.findOne({room: room}, function(err, room){
+    err && console.error(err, 'error finding room!');
     translator.translate(msg, room, function(err, results){
       if(err){
-        console.log('error translating: ', err);
+        console.error('error translating: ', err);
         callback(err);
       }
       msg.translations = results;
@@ -40,9 +37,7 @@ ChatHandler.prototype.getRooms = function(callback){
 // and increment language counter
 ChatHandler.prototype.joinRoom = function(joinRoom, lang, callback){
   Rooms.findOne({room: joinRoom}, function(err, room){
-    if(err){
-      console.log(err, 'error finding room to join!');
-    }
+    err && console.error(err, 'error finding room to join!');
     // if room doesn't exist, make new room
     if(room === null){
       var language = {};
@@ -73,9 +68,7 @@ ChatHandler.prototype.joinRoom = function(joinRoom, lang, callback){
 // and decrement language counter. 
 ChatHandler.prototype.leaveRoom = function(leaveRoom, lang, callback){
   Rooms.findOne({room: leaveRoom}, function(err, room){
-    if(err){
-      console.log('FATAL: error finding room to leave!');
-    }
+    err && console.error('FATAL: error finding room to leave!');
     //subtract connection counter
     room.connections--;
     if(room.connections === 0){
@@ -83,9 +76,7 @@ ChatHandler.prototype.leaveRoom = function(leaveRoom, lang, callback){
       room.remove(function(err) {
         if (err) throw err;
 
-        if (callback) {
-          callback(room);
-        }
+        callback && callback(room);
       });
     } else {
       //remove language counter 
@@ -94,9 +85,7 @@ ChatHandler.prototype.leaveRoom = function(leaveRoom, lang, callback){
       room.save(function(err) {
         if (err) throw err;
 
-        if(callback){
-          callback(room);
-        }
+        callback && callback(room);
       });
     }
 
@@ -105,13 +94,11 @@ ChatHandler.prototype.leaveRoom = function(leaveRoom, lang, callback){
 
 ChatHandler.prototype.changeLanguage = function(oldLang, newLang, currentRoom){
   Rooms.findOne({room: currentRoom}, function(err, room){
-    if(err){
-      console.log('error finding room for changing language');
-    }
+    err && console.error('error finding room for changing language');
     room.lang[oldLang]--;
     // If language exists in room.lang, add 1 to user counter 
     // else initiate new language property to 1
-    room.lang[newLang] = (room.lang[newLang]) ? room.lang[newLang] + 1 : 1;
+    room.lang[newLang] = room.lang[newLang] ? room.lang[newLang] + 1 : 1;
     room.markModified('lang');
     room.save();
   });
