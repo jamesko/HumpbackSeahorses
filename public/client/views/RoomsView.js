@@ -55,10 +55,10 @@ var RoomsView = Backbone.View.extend({
   },
 
   render : function () {
-    $('.activeRooms select').empty().append(this.collection.map(function(room) {
+    $('select[name=room]').empty().append(this.collection.map(function(room) {
       return new RoomView ({model : room}).$el;
     }));
-    $(".activeRooms select").val("lobby");
+    $('select[name=room]').val($('#room').val() || 'lobby');
   }
 
 });

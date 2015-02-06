@@ -5,6 +5,7 @@ var SubmitView = Backbone.View.extend({
     'submit' : 'handleSubmit',
     'change #lang' : 'changeLanguage',
     'click #roomButton' : 'changeRoom',
+    'change .activeRooms select' : 'selectRoom',
     'keyup #chatInput' : 'emitChangesInTypingStatus'
   },
 
@@ -21,7 +22,7 @@ var SubmitView = Backbone.View.extend({
       username: $('#username').val(),
       text: $('#chatInput').val(),
       lang: $('#lang').val(),
-      room: $('#room').val()
+      room: $('select[name=room] option').filter(':selected').val()
     };
     socket.emit('chat message', message);
     $('#chatInput').val('');
@@ -35,10 +36,16 @@ var SubmitView = Backbone.View.extend({
   },
 
   changeRoom : function(e){
-    e.preventDefault();
+    e && e.preventDefault();
     var room = $('#room').val();
     var lang = $('#lang').val();
     socket.emit('join room', {room: room, lang: lang});
+  },
+
+  selectRoom : function(e){
+    e.preventDefault();
+    $('#room').val($('select[name=room] option').filter(':selected').val());
+    this.changeRoom();
   },
 
   emitChangesInTypingStatus : function(e){
