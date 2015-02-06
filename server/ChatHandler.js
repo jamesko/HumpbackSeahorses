@@ -29,7 +29,6 @@ ChatHandler.prototype.getRooms = function(callback){
     var roomList = [];
 
     rooms.forEach(function(room) {
-      console.log(room);
       roomList.push({room: room.room, lang: room.lang});
     });
 
@@ -60,10 +59,13 @@ ChatHandler.prototype.joinRoom = function(joinRoom, lang, callback){
       room.markModified('lang');
       room.connections++;
     }
-    room.save();
-    if(callback){
-      callback(room);
-    }
+    room.save(function(err) {
+      if (err) throw err;
+
+      if(callback){
+        callback(room);
+      }
+    });
   });
 };
 
@@ -78,16 +80,26 @@ ChatHandler.prototype.leaveRoom = function(leaveRoom, lang, callback){
     room.connections--;
     if(room.connections === 0){
       //delete room if no users left:
-      room.remove();
+      room.remove(function(err) {
+        if (err) throw err;
+
+        if (callback) {
+          callback(room);
+        }
+      });
     } else {
       //remove language counter 
       room.lang[lang]--;
       room.markModified('lang');
-      room.save();
+      room.save(function(err) {
+        if (err) throw err;
+
+        if(callback){
+          callback(room);
+        }
+      });
     }
-    if(callback){
-      callback(room);
-    }
+
   });
 };
 
