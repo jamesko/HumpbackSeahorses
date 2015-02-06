@@ -28,4 +28,21 @@ $(function(){
   var usersInRoomView = new UsersInRoomView({
     collection: messages
   });
+
+  //define injectable/removable styles for user message ignoring and highlighting
+  var styleTool = function(id, action, val) {
+    var rule = "";
+    if(action === "ignoreON"){
+      rule = '.message-display[data-user_id="' + id + '"] { display: none; }';
+      rule = rule + '[data-user_id="' + id + '"] { color: grey; }';
+    }else if(action === "highlightON"){
+      //TODO: rule for highlighting users
+    }else if(action === "ignoreOFF" || action === "highlightOFF"){
+      $('style[data-user_id="' + id + '"]').remove();
+      return;
+    }
+    var div = $("<div />", {html: '&shy;<style data-user_id="' + id + '">' + rule + '</style>'})
+              .appendTo("body");
+  };
+
 });

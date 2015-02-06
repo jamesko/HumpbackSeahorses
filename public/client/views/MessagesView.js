@@ -1,7 +1,7 @@
 //returns rendered template
 var MessageView = Backbone.View.extend({
   template : _.template(
-    '<div class="message-display"> \
+    '<div class="message-display" data-user_id="<%- user_id %>"> \
       <span> \
         <strong><%- username %><% if (this.userLangFlag){ %> [<%= lang.toUpperCase()%>]<% } %> \
       </strong>@<%- room %> - <%- text %> \
