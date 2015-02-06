@@ -1,27 +1,20 @@
 //returns rendered template
 var RoomView = Backbone.View.extend({
   template : _.template(
-      '<div class="room-display <%- room %>"> \
-        <span> \
-          <strong><%- room %></strong> \
-        </span> \
-      </div>'
-  ),
-  templateAlt : _.template(
-      '<div class="room-display <%- room %>">' +
-      '<span>' +
-      '<strong><%- room %></strong>' +
-      '</span>' +
-      '</div>'
+    '<div class="room-display <%- room %>">' +
+    '<span>' +
+    '<strong><%- room %></strong>' +
+    '</span>' +
+    '</div>'
   ),
 
-  render : function(userLangFlag){
-    if (userLangFlag) {
-      this.$el.html(this.template(this.model.attributes));
-    } else {
-      this.$el.html(this.templateAlt(this.model.attributes));
-    }
-    $(".activeRooms").append(this.$el);
+  initialize: function() {
+    this.render();
+  },
+
+  render : function(){
+    this.$el.html(this.template(this.model.attributes));
+    return this;
   }
 });
 
@@ -29,20 +22,30 @@ var RoomsView = Backbone.View.extend({
 
   initialize : function(){
     var collection = this.collection;
-    var that = this;
-    //this.collection.on('add', this.render, this);
-    this.collection.on('remove', this.render, this);
+    collection.on('add', this.render, this);
+    collection.on('remove', this.render, this);
 
     socket.emit('get rooms', 'Need rooms.');
 
     //socket.io listener for emits
-    socket.on('all rooms', function(room){
-      var newModel, i;
-      for (var i = room.length - 1; i >= 0; i -= 1) {
-        newModel = new Room(room[i]);
-        collection.add(newModel);
+    socket.on('new room', function(rooms){
+
+      _.each(rooms, function(room) {
+        var roomName = room.room;
+        if (!collection.where({ room: roomName }).length) {
+          collection.add(new Room(room));
+        }
+      });
+    });
+
+    socket.on('remove room', function(room) {
+      var roomName = room.room;
+      var foundRoom = collection.where({room: roomName});
+
+      if (foundRoom.length) {
+        collection.remove(foundRoom);
       }
-      that.render();
+
     });
 
     //storage variable for displayed messages
@@ -50,13 +53,9 @@ var RoomsView = Backbone.View.extend({
   },
 
   render : function () {
-    this.collection.forEach(function(val, key, list) {
-      this.renderRoom(val);
-    }, this);
-  },
-
-  renderRoom : function(room) {
-    var roomView = new RoomView ({model : room});
-    roomView.render();
+    $('.activeRooms').empty().append(this.collection.map(function(room) {
+      return new RoomView ({model : room}).$el;
+    }));
   }
+
 });
