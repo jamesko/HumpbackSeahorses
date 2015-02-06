@@ -49,14 +49,22 @@ io.on('connection', function(socket){
   socket.on('join room', function(data){
     //leave room and update rooms database
     socket.leave(socket.currentRoom);
-    chatter.leaveRoom(socket.currentRoom, data.lang);
+    chatter.leaveRoom(socket.currentRoom, data.lang, function(room) {
+      // Update rooms
+      io.emit('remove room', room);
+    });
 
     //update currentRoom, used by chatter.leaveRoom
     socket.currentRoom = data.room;
 
     //join new room and update rooms database
     socket.join(data.room);
-    chatter.joinRoom(data.room, data.lang);
+    chatter.joinRoom(data.room, data.lang, function() {
+      // Update rooms
+      chatter.getRooms(function(rooms) {
+        io.emit('new room', rooms);
+      });
+    });
   });
 
   socket.on('change language', function(newLang){
